@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saga Store - Tu aventura comienza aquí</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        .product-card {
+            transition: all 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 25px 50px -12px rgb(15 23 42 / 0.25);
+        }
+        .hero-bg {
+            background-image: linear-gradient(rgba(15,23,42,0.85), rgba(15,23,42,0.85)), 
+                              url('https://source.unsplash.com/random/1600x900/?technology');
+            background-size: cover;
+            background-position: center;
+        }
+        .dark-blue {
+            background-color: #0f172a;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans">
+
+    <!-- Navbar -->
+    <nav class="dark-blue text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-bolt text-3xl text-blue-400"></i>
+                <h1 class="text-3xl font-bold tracking-tight">Saga Store</h1>
+            </div>
+            
+            <div class="hidden md:flex gap-8 text-lg">
+                <a href="#" class="hover:text-blue-400 transition">Inicio</a>
+                <a href="#productos" class="hover:text-blue-400 transition">Productos</a>
+                <a href="#" class="hover:text-blue-400 transition">Categorías</a>
+                <a href="#" class="hover:text-blue-400 transition">Ofertas</a>
+            </div>
+
+            <button onclick="toggleCart()" 
+                    class="relative hover:text-blue-400 transition text-2xl">
+                <i class="fa-solid fa-shopping-cart"></i>
+                <span id="cart-count" 
+                      class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="hero-bg text-white py-36 text-center">
+        <div class="max-w-4xl mx-auto px-6">
+            <h2 class="text-5xl md:text-6xl font-bold mb-6">Tu saga comienza aquí</h2>
+            <p class="text-xl md:text-2xl mb-10 text-slate-200">Los mejores productos para tu próxima aventura</p>
+            <a href="#productos" 
+               class="inline-block bg-white text-[#0f172a] hover:bg-slate-100 font-semibold text-lg px-12 py-4 rounded-2xl transition">
+               Explorar Productos
+            </a>
+        </div>
+    </header>
+
+    <!-- Categorías -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <h3 class="text-3xl font-bold text-center mb-12 text-[#0f172a]">Categorías</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="dark-blue text-white p-8 rounded-3xl text-center hover:scale-105 transition cursor-pointer">
+                    <i class="fa-solid fa-laptop text-5xl mb-6 text-blue-400"></i>
+                    <h4 class="font-semibold text-xl">Laptops</h4>
+                </div>
+                <div class="dark-blue text-white p-8 rounded-3xl text-center hover:scale-105 transition cursor-pointer">
+                    <i class="fa-solid fa-headphones text-5xl mb-6 text-blue-400"></i>
+                    <h4 class="font-semibold text-xl">Audio</h4>
+                </div>
+                <div class="dark-blue text-white p-8 rounded-3xl text-center hover:scale-105 transition cursor-pointer">
+                    <i class="fa-solid fa-mobile-screen text-5xl mb-6 text-blue-400"></i>
+                    <h4 class="font-semibold text-xl">Smartphones</h4>
+                </div>
+                <div class="dark-blue text-white p-8 rounded-3xl text-center hover:scale-105 transition cursor-pointer">
+                    <i class="fa-solid fa-gamepad text-5xl mb-6 text-blue-400"></i>
+                    <h4 class="font-semibold text-xl">Gaming</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Productos -->
+    <section id="productos" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <h3 class="text-4xl font-bold text-center mb-12 text-[#0f172a]">Productos Destacados</h3>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8" id="products-grid">
+                <!-- Productos generados por JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Carrito -->
+    <div id="cart-modal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center">
+        <div class="bg-white rounded-3xl w-full max-w-lg mx-4 max-h-[90vh] overflow-hidden shadow-2xl">
+            <div class="p-6 border-b flex justify-between items-center dark-blue text-white rounded-t-3xl">
+                <h3 class="text-2xl font-bold">Tu Carrito</h3>
+                <button onclick="toggleCart()" class="text-4xl leading-none hover:text-blue-400">×</button>
+            </div>
+            
+            <div id="cart-items" class="p-6 overflow-auto max-h-[55vh]"></div>
+            
+            <div class="p-6 border-t bg-gray-50">
+                <div class="flex justify-between items-center text-2xl font-bold mb-6 text-[#0f172a]">
+                    <span>Total:</span>
+                    <span id="cart-total">$0</span>
+                </div>
+                <button onclick="checkout()" 
+                        class="w-full bg-[#0f172a] hover:bg-black text-white py-5 rounded-2xl font-semibold text-lg transition">
+                    Finalizar Compra
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="dark-blue text-white py-12">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <p class="text-3xl font-bold mb-3">Saga Store</p>
+            <p class="text-slate-400">© 2026 - Todos los derechos reservados</p>
+        </div>
+    </footer>
+
+    <script>
+        const products = [
+            { id: 1, name: "MacBook Air M3", price: 1299, img: "https://source.unsplash.com/random/300x300/?laptop" },
+            { id: 2, name: "Sony WH-1000XM5", price: 399, img: "https://source.unsplash.com/random/300x300/?headphones" },
+            { id: 3, name: "iPhone 16 Pro", price: 1099, img: "https://source.unsplash.com/random/300x300/?iphone" },
+            { id: 4, name: "Logitech G Pro X", price: 129, img: "https://source.unsplash.com/random/300x300/?gaming" },
+        ];
+
+        let cart = [];
+
+        function renderProducts() {
+            const container = document.getElementById('products-grid');
+            container.innerHTML = products.map(product => `
+                <div class="product-card bg-white rounded-3xl overflow-hidden border border-slate-200">
+                    <img src="${product.img}" alt="${product.name}" class="w-full h-56 object-cover">
+                    <div class="p-6">
+                        <h4 class="font-semibold text-xl mb-3 text-[#0f172a]">${product.name}</h4>
+                        <p class="text-3xl font-bold text-[#0f172a] mb-6">$${product.price}</p>
+                        <button onclick="addToCart(${product.id})"
+                                class="w-full bg-[#0f172a] hover:bg-black text-white py-4 rounded-2xl font-medium transition">
+                            Agregar al carrito
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            cart.push(product);
+            updateCartCount();
+            
+            const notif = document.createElement('div');
+            notif.className = "fixed bottom-6 right-6 bg-[#0f172a] text-white px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-3";
+            notif.innerHTML = `✅ ${product.name} añadido`;
+            document.body.appendChild(notif);
+            setTimeout(() => notif.remove(), 2200);
+        }
+
+        function updateCartCount() {
+            document.getElementById('cart-count').textContent = cart.length;
+        }
+
+        function toggleCart() {
+            const modal = document.getElementById('cart-modal');
+            modal.classList.toggle('hidden');
+            if (!modal.classList.contains('hidden')) renderCart();
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-items');
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            
+            if (cart.length === 0) {
+                container.innerHTML = `<p class="text-center text-gray-500 py-20 text-lg">Tu carrito está vacío</p>`;
+                document.getElementById('cart-total').textContent = '$0';
+                return;
+            }
+
+            container.innerHTML = cart.map((item, index) => `
+                <div class="flex gap-4 mb-8 last:mb-0">
+                    <img src="${item.img}" class="w-24 h-24 object-cover rounded-2xl">
+                    <div class="flex-1">
+                        <h5 class="font-semibold text-lg">${item.name}</h5>
+                        <p class="text-2xl font-bold text-[#0f172a]">$${item.price}</p>
+                    </div>
+                    <button onclick="removeFromCart(${index})" 
+                            class="text-red-600 hover:text-red-700 text-2xl">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+            
+            document.getElementById('cart-total').textContent = `$${total}`;
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            renderCart();
+            updateCartCount();
+        }
+
+        function checkout() {
+            if (cart.length === 0) return;
+            alert("🎉 ¡Gracias por tu compra en Saga Store!");
+            cart = [];
+            updateCartCount();
+            toggleCart();
+        }
+
+        // Iniciar
+        renderProducts();
+    </script>
+</body>
+</html>
